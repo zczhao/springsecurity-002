@@ -1,0 +1,8 @@
+dependencies {
+	implementation (
+		"org.springframework.boot:spring-boot-devtools",
+		"org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
+		"org.springframework.cloud:spring-cloud-starter-oauth2",
+		"com.alibaba:fastjson:1.2.62"
+	)
+}

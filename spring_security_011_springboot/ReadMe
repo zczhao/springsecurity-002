@@ -1,0 +1,42 @@
+springboot+springsecurity 方法授权
+	
+http.authorizeRequests()对web资源进行授权保护，从Spring Security2.x版本开始，它支持服务层方法的安全性的支持，
+本章学习@PreAuthorize、@PostAuthorize、@Secured注解。
+可以在任何@Configuration实例上使用@EnableGlobalMethodSecurity注解来启用基于注解的安全性
+
+以下内容将启用Spring Security的@Secured注解
+	@Configuration
+	@EnableGlobalMethodSecurity(securedEnabled = true)
+	public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	}
+然后向方法（在类或接口上）添加注解就会限制对该方法的访问。Spring Security的原生注解支持为该方法定义了一组属性。这些将被传递给AccessDecisionManager以供它作出实际的决定
+	public interface BankService {
+		@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
+		public Account readAccount(Long id);
+		
+		@Secured("IS_AUTHENTICATED_ANONYMOUSLY")
+		public Account[] findAccounts();
+	
+		@Secured("ROLE_TELLER")
+		public Account post(Account account, double amount);
+	}
+	以上配置标明readAccount、findAccounts方法可以匿名访问，底层使用WebExpressionVoter投票器，可从AffirmativeBased第23行代码跟踪。
+	post方法需要有TELLER角色才能访问，底层使用RoleVoter投票器
+	
+以下代码可启用prePost注解的支持	
+	@Configuration
+	@EnableGlobalMethodSecurity(prePostEnabled = true)
+	public class WebSecurityConfigextends WebSecurityConfigurerAdapter {
+	}
+	
+	public interface BankService {
+		@PreAuthorize("isAnonymous()")
+		public Account readAccount(Long id);
+		
+		@PreAuthorize("isAnonymous()")
+		public Account[] findAccounts();
+	
+		@PreAuthorize("hasAuthority('p_transfer') and hasAuthority('p_read_account')")
+		public Account post(Account account, double amount);
+	}
+	以上配置标明readAccount、findAccounts方法可以匿名访问，post方法需要同时拥有p_transfer和p_read_account权限才能访问，底层使用WebExpressionVoter投票器，可以从AffirmativeBased第23行代码跟踪。

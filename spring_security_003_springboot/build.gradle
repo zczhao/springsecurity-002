@@ -1,0 +1,60 @@
+buildscript {
+  repositories {
+  	 maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+     mavenCentral()
+  }
+
+  dependencies {
+    classpath (
+    	"org.springframework.boot:spring-boot-gradle-plugin:2.2.1.RELEASE"
+    )
+  }
+}
+
+plugins {
+	id "java"
+	id "war"
+    id "org.springframework.boot" version "2.2.1.RELEASE"
+    
+}
+
+apply plugin: "io.spring.dependency-management"
+
+group "zzc.security"
+version "1.0-SNAPSHOT"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+
+repositories {
+	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+    mavenCentral()
+}
+
+dependencies {
+	// 编译、运行时需要的依赖，前提： plugins -> id "java" | plugins -> id "war"
+	implementation (
+		"org.springframework.boot:spring-boot-starter-web",
+		"org.springframework.boot:spring-boot-starter-security",
+		"org.springframework.boot:spring-boot-devtools"
+	)
+	// 在运行时不需要的依赖，前提 ：plugins -> id "war"
+	providedCompile (
+		"javax.servlet:jstl",
+		"org.apache.tomcat.embed:tomcat-embed-jasper"
+	)
+	// 开发依赖
+	annotationProcessor "org.projectlombok:lombok:1.18.10"
+	compileOnly "org.projectlombok:lombok:1.18.10"
+	// 测试依赖
+	testAnnotationProcessor "org.projectlombok:lombok:1.18.10"
+	testCompileOnly "org.projectlombok:lombok:1.18.10"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    
+}

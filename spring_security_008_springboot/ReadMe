@@ -1,0 +1,30 @@
+springboot+springsecurity 自定义退出
+
+退出操作发出时，将会发生：
+	1、使用HTTP Session无效
+	2、清除SecurityContextHolder
+	3、跳转到登录页
+	
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.
+			...
+			.and()
+				.logout()
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/login-view?logout")
+				.logoutSuccessHandler(logoutSuccessHandler)
+				.addLogoutHandler(logoutHandler)
+				.invalidateHttpSession(true);
+	}
+	
+	1、提供系统退出支持，使用WebSecurityConfigurerAdapter会自动被应用
+	2、设置触发退出操作的URL(默认是/logout)
+	3、退出之后跳转的URL。默认是/login?logout
+	4、定制LogoutSuccessHandler，用于实现用户退出成功时的处理，如果指定了这个选项那么logoutSuccessUrl()的设置会被忽略
+	5、添加一个LogoutHandler，用于实现用户退出时的清理工作，默认SecurityContextLogoutHolder会被添加为最后一个LogoutHandler
+	6、指定是否在退出时让HttpSession无效，默认设置为true
+	
+	注意：如果让logout在GET请求下生效，必须关闭防止CSRF攻击csrf().disable()。如果开启了CSRF，必须用post方式请求/logout。
+	
+	

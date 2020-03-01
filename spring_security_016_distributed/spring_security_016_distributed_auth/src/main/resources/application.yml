@@ -1,0 +1,20 @@
+server:
+  port: 9002
+  
+spring:
+  application:
+    name: auth-server
+  datasource: 
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.156.61:3306/user_db
+    driver-class-name: com.mysql.jdbc.Driver
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9001/eureka/ 
+    
+logging:
+  level:
+     org.springframework.jdbc.core.JdbcTemplate: debug    

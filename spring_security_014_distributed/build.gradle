@@ -1,0 +1,49 @@
+buildscript {
+  ext {
+    bootVersion = "2.0.4.RELEASE"
+  }
+  repositories {
+  	 maven { url "http://maven.aliyun.com/nexus/content/groups/public/"}
+  }
+
+  dependencies {
+    classpath("org.springframework.boot:spring-boot-gradle-plugin:${bootVersion}")
+  }
+}
+
+allprojects {
+    apply plugin:"java"
+	apply plugin:"org.springframework.boot" 
+    apply plugin:"io.spring.dependency-management"
+    group = "zzc.springsecurity.oauth2"
+    version = "1.0-SNAPSHOT"
+    
+    java {
+    	sourceCompatibility = JavaVersion.VERSION_1_8
+    	targetCompatibility = JavaVersion.VERSION_1_8
+	}
+    
+    repositories {
+		maven { url "http://maven.aliyun.com/nexus/content/groups/public/"}
+  	}
+    
+    dependencyManagement {
+    	imports {
+    		mavenBom "org.springframework.boot:spring-boot-starter-parent:${bootVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.RELEASE"
+    	}
+    }
+}
+
+subprojects {
+	dependencies {
+		runtime "mysql:mysql-connector-java:5.1.48"
+		// 开发依赖
+		annotationProcessor "org.projectlombok:lombok:1.18.10"
+		compileOnly "org.projectlombok:lombok:1.18.10"
+		// 测试依赖
+		testAnnotationProcessor "org.projectlombok:lombok:1.18.10"
+		testCompileOnly "org.projectlombok:lombok:1.18.10"
+		testImplementation "org.springframework.boot:spring-boot-starter-test"
+	}
+}

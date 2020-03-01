@@ -1,0 +1,13 @@
+dependencies {
+	implementation (
+		"org.springframework.boot:spring-boot-starter-web",
+		"org.springframework.boot:spring-boot-starter-jdbc",
+		"org.springframework.boot:spring-boot-devtools",
+		"mysql:mysql-connector-java",
+		"org.springframework.boot:spring-boot-starter-actuator",
+		"org.springframework.cloud:spring-cloud-starter-netflix-eureka-client",
+		"org.springframework.cloud:spring-cloud-starter-oauth2",
+		"com.alibaba:fastjson:1.2.62"
+	)
+	
+}

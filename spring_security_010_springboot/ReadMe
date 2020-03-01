@@ -1,0 +1,11 @@
+springboot+springsecurity web授权
+	
+保护URL常用的方法有：
+authenticated() 保护URL，需要登录
+permitAll() 指定URL无需保护，，一般应用与静态资源文件
+hasRole(String role) 限制单个角色访问，角色将p被增加"ROLE_"前缀，所以"ADMIN"将和"ROLE_ADMIN"进行比较
+hasAuthority(String authority) 限制单个访问
+hasAnyRole(String... roles) 允许多个角色访问
+hasAnyAuthority(String... authority) 允许多个访问
+access(String attribute) 该方法使用spEL表达式，所以可以创建复杂的限制
+hasIpAddress(String ipaddressExpression) 限制IP地址或子网

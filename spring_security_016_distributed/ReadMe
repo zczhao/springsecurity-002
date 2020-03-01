@@ -1,0 +1,38 @@
+springcloud+springsecurity 分布式认证授权-扩展用户信息
+
+由于JWT令牌中用户身份信息来源于UserDetails中，UserDetails中仅定义了username为用户的身份信息
+扩展用户信息思路：
+	1、扩展UserDetails，使之包含更多的属性
+	2、扩展username的内容，比如存入json数据内容作为username的内容
+相比较而言，方案二比较简单还不用破坏UserDetails的结构，此安全采用方案二
+	从数据库查询到user，将整体user转成json存入UserDetails对象的username属性中 
+		zzc.springcloud.auth.service.SpringDataUserDetailsService.loadUserByUsername(String) 44行
+
+eureka 
+	http://localhost:9001/
+gateway
+	http://localhost:9004/
+auth
+	http://localhost:9002/
+order
+	http://localhost:9003/
+	
+申请令牌	
+	采用密码模式：
+		PostMan发起POST请求：http://localhost:9004/auth/oauth/token
+			请求参数：
+				grant_type = password
+				client_id = c1
+				client_secret = secret
+				username = lisi
+				password = 123456
+				
+校验令牌
+	PostMan发起POST请求：http://localhost:9004/auth/oauth/check_token
+		请求参数：
+			token = 上面申请的令牌
+			
+访问order资源服务
+	PostMan发起GET请求：http://localhost:9004/order/r1
+		Headers
+			Authorization = Bearer access_token

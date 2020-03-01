@@ -1,0 +1,99 @@
+springcloud+springsecurity 内存方式认证
+
+
+authorization_code(授权码模式)
+    获取授权码
+    /oauth/authorize?client_id=c1&response_type=code&scope=all&redirect_uri=http://www.baidu.com
+        参数列表如下：
+            client_id:客户端准入标识
+            response_type:授权码模式固定为code
+            scope:客户端权限
+            redirect_uri:跳转uri，当授权码申请成功后会跳转到此地址，并在后边带上code参数(授权)
+    通过授权码获取token        
+    /oauth/token?client_id=c1&client_secret=secret&grant_type=authorization_code&code=授权码&redirect_uri=http://www.baidu.com
+        参数列表如下：
+            client_id:客户端准入标识
+            client_secret:客户端秘钥
+            grant_type:授权类型，填写authorization_code，表示授权码模式
+            code:授权码，就是通过上一步获取的授权码，注意：授权码只使用一次就无效了，需要重新申请
+            redirect_uri:申请授权码时的跳转URL，一定要和申请授权码时用的redirect_uri一致
+    测试
+        http://localhost:9002/oauth/authorize?client_id=c1&response_type=code&scope=all&redirect_uri=http://www.baidu.com
+        发送请求后，同意 -> https://www.baidu.com/?code=O2cvoY
+        PostMan发送POST请求：http://localhost:9002/oauth/token
+            grant_type = authorization_code
+            client_id = c1
+            client_secret = secret
+            code = O2cvoY (上面请求回调的授权码)
+            redirect_uri = http://www.baidu.com
+        返回参数：
+            {
+                "access_token": "fb0d6cfb-4994-4f93-9e6a-4f6ef9076ed8",
+                "token_type": "bearer",
+                "refresh_token": "50415eb2-4d35-4645-ad4d-77504b3c05f3",
+                "expires_in": 7199,
+                "scope": "all"
+            }
+
+        
+implicit(简化模式)
+    获取token
+    /oauth/authorize?client_id=c1&response_type=token&scope=all&redirect_uri=http://www.baidu.com
+    测试：
+        http://localhost:9002/oauth/authorize?client_id=c1&response_type=token&scope=all&redirect_uri=http://www.baidu.com
+        发送请求后：https://www.baidu.com/#access_token=c5fdbd57-036f-4833-a23f-9b972db42586&token_type=bearer&expires_in=7199
+
+-----------------------------------------------------------------------------------------
+  
+password(密码模式)
+      获取token
+     /oauth/token?client_id=c1&client_secret=secret&grant_type=password&username=用户名&password=密码
+        参数列表如下：
+            client_id:客户端准入标识
+            client_secret:客户端秘钥
+            grant_type:授权类型，填写password，表示密码模式
+            username:资源拥有者用户名
+            password:资源拥有者密码
+    测试
+         PostMan发送POST请求：http://localhost:9002/oauth/token
+            grant_type = password
+            client_id = c1
+            client_secret = secret
+            username = lisi
+            password = 123456
+        返回参数：
+            {
+                "access_token": "5262d268-51ee-4c7d-b633-9eb8b4b2fdb2",
+                "token_type": "bearer",
+                "refresh_token": "a39fc38b-512e-4207-884d-882899676ee1",
+                "expires_in": 7199,
+                "scope": "all"
+            }
+
+-----------------------------------------------------------------------------------------
+
+client_credentials(客户端模式)
+     /oauth/token?client_id=c1&client_secret=secret&grant_type=client_credentials
+        参数列表如下：
+            client_id:客户端准入标识
+            client_secret:客户端秘钥
+            grant_type:授权类型，填写client_credentials，表示客户模式
+    测试
+        PostMan发送POST请求：http://localhost:9002/oauth/token
+            grant_type = client_credentials
+            client_id = c1
+            client_secret = secret
+        返回参数：
+            {
+                "access_token": "6d39a366-ab30-449a-86d6-7b2d0af99d56",
+                "token_type": "bearer",
+                "expires_in": 7199,
+                "scope": "all"
+            }
+	
+-----------------------------------------------------------------------------------------
+
+访问spring_security_012_distributed_order资源
+PostMan请求：http://localhost:9003/r3
+Headers
+	Authorization = Bearer access_token

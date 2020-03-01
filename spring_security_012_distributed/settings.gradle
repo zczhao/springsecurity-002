@@ -1,0 +1,2 @@
+rootProject.name = "spring_security_012_distributed"
+include "spring_security_012_distributed_auth","spring_security_012_distributed_order"

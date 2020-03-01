@@ -1,0 +1,51 @@
+buildscript {
+  repositories {
+     mavenCentral()
+  }
+}
+
+plugins {
+	id "java"
+    id "war"
+    id "eclipse-wtp"
+    // 文档：https://gretty-gradle-plugin.github.io/gretty-doc/
+    id "org.gretty" version "3.0.1"
+}
+
+group "zzc.security"
+version "1.0-SNAPSHOT"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+
+repositories {
+    mavenCentral()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+}
+
+dependencies {
+	implementation ("org.springframework:spring-webmvc:5.2.1.RELEASE")
+	// 开发依赖
+	annotationProcessor "org.projectlombok:lombok:1.18.10"
+	compileOnly "org.projectlombok:lombok:1.18.10"
+	providedCompile "javax.servlet:javax.servlet-api:3.1.0"
+	// 测试依赖
+	testAnnotationProcessor "org.projectlombok:lombok:1.18.10"
+	testCompileOnly "org.projectlombok:lombok:1.18.10"
+    testImplementation "junit:junit:4.13"
+}
+
+gretty {
+	httpPort = 8080
+	contextPath = "/"
+  	fastReload = true // 监听webapp/中的内容，文件发生改变，无需重启
+  	scanInterval = 1 // 1秒扫描文件一次
+}

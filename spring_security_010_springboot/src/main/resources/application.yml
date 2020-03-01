@@ -1,0 +1,20 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+spring:
+  application:
+    name: security-springboot
+  mvc: 
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+  datasource: 
+    username: root
+    password: 123456
+    url: jdbc:mysql://192.168.156.61:3306/user_db
+    driver-class-name: com.mysql.jdbc.Driver
+   
+logging:
+  level:
+     org.springframework.jdbc.core.JdbcTemplate: debug

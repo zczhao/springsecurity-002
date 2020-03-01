@@ -1,0 +1,18 @@
+springboot+springsecurity 自定义登录页
+
+spring security为防止CSRF(Cross-site request forgery跨站请求伪造)的发生，限制了除了get以外的大多数方法。
+解决办法1：
+	屏蔽CSRF控制，即spring security不再限制CSRF。
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable() // 屏蔽CSRF控制，即spring security不再限制CSRF
+			...
+	}
+	
+解决办法2：
+	在login.jsp页面添加一个token，spring security会验证token，如果token合法则可以继续请求。
+	修改login.jsp
+	<form action="login" method="post">
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+		...
+	</form>
