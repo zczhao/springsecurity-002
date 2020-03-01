@@ -15,4 +15,7 @@ spring_security_013_distributed_auth_04
 spring_security_013_distributed_auth_05
 	登录增加验证码，用于有自定义登录页
 	
+spring_security_013_distributed_order_03
+	集成swagger2
+	
 自定义spring security oauth /auth/token的返回内容格式：https://blog.csdn.net/u013905744/article/details/100637224	
