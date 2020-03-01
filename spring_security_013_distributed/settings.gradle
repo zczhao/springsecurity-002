@@ -5,4 +5,5 @@ include "spring_security_013_distributed_auth_01",
 		"spring_security_013_distributed_auth_04",
 		"spring_security_013_distributed_auth_05",
 		"spring_security_013_distributed_order_01",
-		"spring_security_013_distributed_order_02"
+		"spring_security_013_distributed_order_02",
+		"spring_security_013_distributed_order_03"
