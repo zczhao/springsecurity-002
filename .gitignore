@@ -5,6 +5,7 @@
 *.class
 target
 bin
+build
 .metadata
 RemoteSystemsTempFiles
 Servers
