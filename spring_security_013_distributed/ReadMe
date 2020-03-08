@@ -3,19 +3,31 @@ springcloud+springsecurity JWT令牌方式
 spring_security_013_distributed_auth_01
 	从数据库取出用户和权限验证
 	
-spring_security_013_distributed_auth_02
-	异常统一返回
 	
-spring_security_013_distributed_auth_03
+spring_security_013_distributed_auth_02
 	授权码操作、接入客户端信息 ：可改为走接口
 	
+spring_security_013_distributed_auth_03
+	自定义密码认证器
+	UsernameNotFoundException（用户不存在）
+	DisabledException（用户已被禁用）
+	BadCredentialsException（坏的凭据）
+	LockedException（账户锁定）
+	AccountExpiredException （账户过期）
+	CredentialsExpiredException（证书过期）
+
+	
 spring_security_013_distributed_auth_04
-	自定义密码认证器	
-	
-spring_security_013_distributed_auth_05
 	登录增加验证码，用于有自定义登录页
-	
+
+spring_security_013_distributed_auth_05
+	/auth/token 统一异常返回
+	/auth/token的返回内容格式自定义
+		
+spring_security_013_distributed_order_02
+	token效状态统一格式返回
+	无权限统一格式返回
+		
 spring_security_013_distributed_order_03
 	集成swagger2
 	
-自定义spring security oauth /auth/token的返回内容格式：https://blog.csdn.net/u013905744/article/details/100637224	

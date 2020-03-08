@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import zzc.springcloud.auth.handler.CustomAuthenticationProvider;
 import zzc.springcloud.auth.service.CustomUserDetailsService;
 
 @Configuration
@@ -26,6 +26,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManager() throws Exception {
 		return super.authenticationManager();
 	}
+		
+	@Autowired
+	private CustomAuthenticationProvider customAuthenticationProvider;
+	
+	@Autowired
+	private CustomUserDetailsService customUserDetailsService;
 	
 	/**
 	 * 密码编码器
@@ -36,22 +42,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 	
-	@Autowired
-	private CustomUserDetailsService customUserService;
-	
-	/**
-	 * @return 封装身份认证提供者
-	 */
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-		authenticationProvider.setUserDetailsService(customUserService);  // 自定义的用户和角色数据提供者
-		authenticationProvider.setPasswordEncoder(passwordEncoder()); // 设置密码加密对象
-		return authenticationProvider;
-	}
-		
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(authenticationProvider()); // 设置身份认证提供者
+		// 将自定义的CustomAuthenticationProvider装配到AuthenticationManagerBuilder
+		auth.authenticationProvider(customAuthenticationProvider);
+		// 将自定的CustomUserDetailsService装配到AuthenticationManagerBuilder
+		auth.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
 	}
 	
 	/**

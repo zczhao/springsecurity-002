@@ -19,6 +19,8 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import zzc.springcloud.auth.exception.CustomWebResponseExceptionTranslator;
+
 /**
  * 授权服务配置
  */
@@ -40,7 +42,9 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 	
 	@Autowired
 	private JwtAccessTokenConverter accessTokenConverter;
-	
+		
+	@Autowired
+	private CustomWebResponseExceptionTranslator webResponseExceptionTranslator;
 	/**
 	 * 配置接入客户端信息
 	 */
@@ -79,7 +83,8 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 		.authenticationManager(authenticationManager) // 密码模式需要
 		.authorizationCodeServices(authorizationCodeServices) // 授权码模式需要
 		.tokenServices(tokenServices()) // 令牌管理服务
-		.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST); // 允许请求方式
+		.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST) // 允许请求方式
+		.exceptionTranslator(webResponseExceptionTranslator); // 自定义 /oauth/token 异常处理
 	}
 	
 	/**

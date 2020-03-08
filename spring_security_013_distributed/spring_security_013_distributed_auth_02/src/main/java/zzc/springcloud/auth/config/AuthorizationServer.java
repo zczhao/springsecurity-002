@@ -7,22 +7,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
-
-import zzc.springcloud.auth.handler.MyWebResponseExceptionTranslator;
 
 /**
  * 授权服务配置
@@ -35,7 +30,7 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 	private TokenStore tokenStore;
 
 	@Autowired
-	private ClientDetailsService clientDetailsService;
+	private CustomClientDetailsService clientDetailsService;
 	
 	@Autowired
 	private AuthorizationCodeServices authorizationCodeServices;
@@ -45,25 +40,15 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 	
 	@Autowired
 	private JwtAccessTokenConverter accessTokenConverter;
-		
+	
 	/**
-	 * 配置客户端详细信息服务，使用内存方式
+	 * 配置接入客户端信息
 	 */
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory() // 使用in-memory存储
-				.withClient("c1")// (必须的)用来标识客户的id
-				.secret(new BCryptPasswordEncoder().encode("secret"))// (需要值得信任的客户端)客户端密钥，
-				.resourceIds("res1")// 资源列表
-				.authorizedGrantTypes("authorization_code", "password", "client_credentials", "implicit",
-						"refresh_token") // 此客户端可以使用的授权类型，默认为空
-				.scopes("all") // 允许的授权范围，用来限制客户端的访问范围，如果为空(默认)的话，那么客户端拥有全部的访问范围
-				.autoApprove(false) // 跳转到授权页面
-				.redirectUris("http://www.baidu.com"); // 验证回调地址
-				// authorities //此客户端可以使用的权限(基于Spring Security authorities)
-			
+		clients.withClientDetails(clientDetailsService);
 	}
-	
+		
 	/**
 	 * 令牌管理服务
 	 * @return
@@ -91,21 +76,19 @@ public class AuthorizationServer extends AuthorizationServerConfigurerAdapter {
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
-		.exceptionTranslator(new MyWebResponseExceptionTranslator()) // 自定义 /oauth/token 异常处理
 		.authenticationManager(authenticationManager) // 密码模式需要
 		.authorizationCodeServices(authorizationCodeServices) // 授权码模式需要
 		.tokenServices(tokenServices()) // 令牌管理服务
 		.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST); // 允许请求方式
-		
 	}
 	
 	/**
-	 * 设置授权码模式的授权码如何存取，采用内存方式
+	 * 设置授权码模式的授权码如何存取，采用数据库方式
 	 * @return
 	 */
 	@Bean
 	public AuthorizationCodeServices authorizationCodeServices () {
-		return new InMemoryAuthorizationCodeServices();
+		return new CustomAuthorizationCodeServices();
 	}
 	
 	/**

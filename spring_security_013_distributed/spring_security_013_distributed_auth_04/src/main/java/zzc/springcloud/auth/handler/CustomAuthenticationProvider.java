@@ -9,6 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import zzc.springcloud.auth.config.CustomWebAuthenticationDetails;
 import zzc.springcloud.auth.service.CustomUserDetailsService;
 
 /**
@@ -32,7 +33,16 @@ public class CustomAuthenticationProvider extends AbstractUserDetailsAuthenticat
 		String username = authentication.getName();
 		// 用户输入的密码
 		String password = authentication.getCredentials().toString();
-		System.out.println("username=[" + username + "] password=[" + password + "]");
+		String verifyCode = null;
+		Object details = authentication.getDetails();
+		if (details != null) {
+			if (details instanceof CustomWebAuthenticationDetails) {
+				// 通过CustomWebAuthenticationDetails获取用户输入的验证码信息
+				CustomWebAuthenticationDetails customWebAuthenticationDetails = (CustomWebAuthenticationDetails) authentication.getDetails();
+				verifyCode = customWebAuthenticationDetails.getVerifyCode();
+			}
+		}
+		System.out.println("username=[" + username + "] password=[" + password + "] verifyCode=[" + verifyCode + "]");
 		
 		// 通过自定义的CustomUserDetailsService，以用户输入的用户名查询用户信息
 		UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);

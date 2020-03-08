@@ -1,4 +1,4 @@
-package zzc.springcloud.auth.handler;
+package zzc.springcloud.auth.exception;
 
 import java.io.IOException;
 import java.util.Map;

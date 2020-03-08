@@ -19,5 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authorizeRequests()
 			.antMatchers("/r/**").authenticated() // 所有/r/**的请求必须认证通过
 			.anyRequest().permitAll(); // 除了/r/**，其它的请求可以访问
+		
 	}
+	
 }

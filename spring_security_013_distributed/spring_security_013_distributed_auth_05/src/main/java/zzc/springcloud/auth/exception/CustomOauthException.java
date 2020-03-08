@@ -1,4 +1,4 @@
-package zzc.springcloud.auth.handler;
+package zzc.springcloud.auth.exception;
 
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 

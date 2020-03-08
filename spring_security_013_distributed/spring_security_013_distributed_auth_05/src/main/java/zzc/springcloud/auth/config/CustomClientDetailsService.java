@@ -35,6 +35,10 @@ public class CustomClientDetailsService implements ClientDetailsService {
 		String redirectUris = "http://www.baidu.com"; 
 		// authorities：可为空，指定用户的权限范围，如果授权的过程需要用户登陆，该字段不生效，implicit和client_credentials需要
 		String authorities = null;
+		// access_token_validity：设置access_token的有效时间(秒)
+		// Integer accessTokenValiditySeconds = 3600;
+		// refresh_token_validity：设置refresh_token有效期(秒)
+		// Integer refreshTokenValiditySeconds = 7200;
 		BaseClientDetails clientDetails = new BaseClientDetails(clientId, resourceIds,
 				 scopes,  grantTypes,  authorities,
 				 redirectUris);

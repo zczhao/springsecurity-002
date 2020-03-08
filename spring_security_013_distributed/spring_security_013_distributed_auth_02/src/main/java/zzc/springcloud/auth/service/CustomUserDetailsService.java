@@ -32,9 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		user.setFullname("李四");
 		user.setMobile("13138881254");
 		user.setPassword("$2a$10$u4sXWV/RH2XQKnuub/IOX.kLToj1zc36cDx5B9MYU8fgipTn1E.Ty");
-		
-		// 如果用户不存在直接抛出UsernameNotFoundException异常 throw new UsernameNotFoundException("用户名为" + username + "的用户不存在");
-		
+				
 		// 根据用户id去数据库查询用户的权限
 		List<String> permissions = new ArrayList<>();
 		permissions.add("p1");

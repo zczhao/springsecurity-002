@@ -10,6 +10,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+import zzc.springcloud.order.handler.AuthExceptionEntryPoint;
+import zzc.springcloud.order.handler.CustomAccessDeniedHandler;
+
 @Configuration
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -21,11 +24,21 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Autowired
 	private TokenStore tokenStore;
 	
+	@Autowired
+	private AuthExceptionEntryPoint authExceptionEntryPoint;
+	
+	@Autowired
+	private CustomAccessDeniedHandler customAccessDeniedHandler;
+	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
 		resources.resourceId(RESOURCE_ID) // 资源id
 		.tokenStore(tokenStore) // 使用JWT验证令牌的服务
 		.stateless(true);
+		
+		resources
+			.authenticationEntryPoint(authExceptionEntryPoint) // token校验失败，统一格式返回
+			.accessDeniedHandler(customAccessDeniedHandler); // 无权限，统一格式返回
 	}
 
 	@Override
